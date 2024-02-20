@@ -2,37 +2,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1000px;
+  width: 1200px;
   margin: auto;
   overflow-x: hidden;
   flex-direction: column;
-  /*border: red 2px solid;*/
-
 }
 
 .container-1 {
   display: flex;
   align-items: center;
-  width: 90%;
+  width: 70%;
   flex-direction: column;
+  margin-bottom: 20px;
+  border-radius: 18px;
 }
 
 .container-2 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  /*margin: 20px auto;*/
-  width: 90%;
+  width: 97%;
+  padding: 0 10px;
 }
+
+.container-3 {
+  display: flex;
+  align-items: center;
+  width: 410px;
+  flex-direction: column;
+  margin-bottom: 20px;
+  border-radius: 18px;
+  /*border: red 2px solid;*/
+
+}
+
+.container-compact {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 840px;
+  padding: 0 10px;
+}
+
 
 .like-dislike-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   width: 100px;
 }
+
 .title {
   margin-top: 30px;
   font-family: Calibri, serif;
@@ -43,12 +62,11 @@
 .title-little {
   font-family: Calibri, serif;
   text-align: left;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .input-container {
   flex-direction: row;
-  justify-content: space-between;
   position: relative;
   display: inline-block;
   margin-top: 10px;
@@ -59,7 +77,7 @@
   height: 30px;
   border: 2px solid #ccc;
   border-radius: 5px;
-  width: 830px;
+  width: 780px;
 }
 
 .icon {
@@ -75,8 +93,13 @@
 .image-main {
   height: 400px;
   margin: 40px auto 15px;
-
 }
+
+.image-second {
+  height: 130px;
+  margin: 40px auto 15px;
+}
+
 .like-button, .dislike-button {
   background: none;
   border: none;
@@ -90,4 +113,31 @@
 
 .like-icon, .dislike-icon {
   height: 20px;
+}
+
+.container-button {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  width: 97%;
+  margin-bottom: 15px;
+}
+
+.button {
+  border-radius: 15px;
+  height: 30px;
+  width: 130px;
+  cursor: pointer;
+}
+
+.shadow {
+  box-shadow: 0 5px 10px 3px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  padding: 0 10px;
+}
+
+.space-between {
+  justify-content: space-between;
 }
