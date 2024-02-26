@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {useReactions} from '../Context';
 import lope from "../images/loupe.png";
 import people from "../images/people.jpg";
 import like from "../images/greenLike.jpg";
@@ -7,6 +8,7 @@ import greenLike from "../images/like.jpg";
 import dislike from "../images/dislike.jpg";
 import redDislike from "../images/redDislike.jpg";
 import landscape from "../images/landscape.jpg";
+import {TypePost} from "../types/TypePost";
 import cat from "../images/cat.jpg";
 import car2 from "../images/car2.png";
 import camp2 from "../images/camp2.png";
@@ -18,24 +20,21 @@ import sunset from "../images/sunset.jpg";
 import book from "../images/book.jpg";
 import '../App.css';
 
-interface Post {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
-}
-
 export function HomePage() {
-
     const navigate = useNavigate();
 
+    const {
+        likeCount,
+        handleLike,
+        reactionStatus,
+        handleDislike,
+        dislikeCount,
+        setLikeCount,
+        setDislikeCount
+    } = useReactions();
 
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<TypePost[]>([]);
     const images = [landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
-
-    const [likeCount, setLikeCount] = useState<Record<number, number>>({});
-    const [dislikeCount, setDislikeCount] = useState<Record<number, number>>({});
-    const [reactionStatus, setReactionStatus] = useState<Record<number, "like" | "dislike" | null>>({});
 
 
 
@@ -43,12 +42,12 @@ export function HomePage() {
     useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/posts')
             .then(response => response.json())
-            .then((data: Post[])=> {
+            .then((data: TypePost[]) => {
                 setPosts(data);
                 // Инициализация лайков и дизлайков случайными значениями
                 const initialLikes: Record<number, number> = {};
                 const initialDislikes: Record<number, number> = {};
-                data.forEach((post: Post) => {
+                data.forEach((post: TypePost) => {
                     initialLikes[post.id] = Math.floor(Math.random() * 50);
                     initialDislikes[post.id] = Math.floor(Math.random() * 50);
                 });
@@ -57,46 +56,10 @@ export function HomePage() {
             });
     }, []);
 
-    const handleLike = (postId: number) => {
-        setReactionStatus(prev => {
-            const currentReaction = prev[postId];
-            if (currentReaction === "like") {
-                // Отменяем лайк
-                setLikeCount(prevCount => ({ ...prevCount, [postId]: prevCount[postId] - 1 }));
-                return { ...prev, [postId]: null };
-            } else {
-                // Добавляем или переключаем на лайк
-                const adjustment = currentReaction === "dislike" ? -1 : 0;
-                setLikeCount(prevCount => ({ ...prevCount, [postId]: (prevCount[postId] || 0) + 1 }));
-                setDislikeCount(prevCount => ({ ...prevCount, [postId]: Math.max((prevCount[postId] || 0) + adjustment, 0) }));
-                return { ...prev, [postId]: "like" };
-            }
-        });
-    };
-
-    const handleDislike = (postId: number) => {
-        setReactionStatus(prev => {
-            const currentReaction = prev[postId];
-            if (currentReaction === "dislike") {
-                // Отменяем дизлайк
-                setDislikeCount(prevCount => ({ ...prevCount, [postId]: prevCount[postId] - 1 }));
-                return { ...prev, [postId]: null };
-            } else {
-                // Добавляем или переключаем на дизлайк
-                const adjustment = currentReaction === "like" ? -1 : 0;
-                setDislikeCount(prevCount => ({ ...prevCount, [postId]: (prevCount[postId] || 0) + 1 }));
-                setLikeCount(prevCount => ({ ...prevCount, [postId]: Math.max((prevCount[postId] || 0) + adjustment, 0) }));
-                return { ...prev, [postId]: "dislike" };
-            }
-        });
-    };
-
 
     const handleClick = (postId: number) => {
         navigate(`/post/${postId}`);
     };
-
-    console.log(posts);
 
     return (
         <div className="App">
@@ -121,9 +84,9 @@ export function HomePage() {
                                 className="like-button"
                                 onClick={() => handleLike(posts[0].id)}
                                 aria-label="Лайк"
-                                // style={{ color: likedPosts[post.id] ? 'green' : 'black' }}
                             >
-                                <img src={reactionStatus[posts[0].id] === "like" ? like : greenLike} alt="" className='like-icon'/>
+                                <img src={reactionStatus[posts[0].id] === "like" ? like : greenLike} alt=""
+                                     className='like-icon'/>
                             </button>
                             <span>{likeCount[posts[0].id]}</span>
                             <button
@@ -131,7 +94,8 @@ export function HomePage() {
                                 onClick={() => handleDislike(posts[0].id)}
                                 aria-label="Дизлайк"
                             >
-                                <img src={reactionStatus[posts[0].id] === "dislike" ? redDislike : dislike} alt="" className='dislike-icon'/>
+                                <img src={reactionStatus[posts[0].id] === "dislike" ? redDislike : dislike} alt=""
+                                     className='dislike-icon'/>
                             </button>
                             <span>{dislikeCount[posts[0].id]}</span>
                         </div>
@@ -156,7 +120,8 @@ export function HomePage() {
                                     onClick={() => handleLike(post.id)}
                                     aria-label="Лайк"
                                 >
-                                    <img src={reactionStatus[post.id] === "like" ?  like : greenLike } alt="" className='like-icon'/>
+                                    <img src={reactionStatus[post.id] === "like" ? like : greenLike} alt=""
+                                         className='like-icon'/>
                                 </button>
                                 <span>{likeCount[post.id]}</span>
                                 <button
@@ -164,7 +129,8 @@ export function HomePage() {
                                     onClick={() => handleDislike(post.id)}
                                     aria-label="Дизлайк"
                                 >
-                                    <img src={reactionStatus[post.id] === "dislike" ? redDislike : dislike} alt="" className='dislike-icon'/>
+                                    <img src={reactionStatus[post.id] === "dislike" ? redDislike : dislike} alt=""
+                                         className='dislike-icon'/>
                                 </button>
                                 <span>{dislikeCount[post.id]}</span>
                             </div>
@@ -176,4 +142,5 @@ export function HomePage() {
         </div>
     );
 }
+
 export default HomePage;

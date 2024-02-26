@@ -24,6 +24,7 @@
   align-items: center;
   width: 97%;
   padding: 0 10px;
+  /*border: red 2px solid;*/
 }
 
 .container-3 {
@@ -33,7 +34,6 @@
   flex-direction: column;
   margin-bottom: 20px;
   border-radius: 18px;
-  /*border: red 2px solid;*/
 
 }
 
