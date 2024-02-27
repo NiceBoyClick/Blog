@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import { useReactions } from "../Context";
+import {getPostById} from "../api";
+import {TypePost} from "../types/TypePost";
 import like from "../images/greenLike.jpg";
 import greenLike from "../images/like.jpg";
 import arrowLeft from "../images/arrowLeft.png";
 import redDislike from "../images/redDislike.jpg";
 import dislike from "../images/dislike.jpg";
-import {getPostById} from "../api";
-import {TypePost} from "../types/TypePost";
+import people from "../images/people.jpg";
 import landscape from "../images/landscape.jpg";
 import cat from "../images/cat.jpg";
 import car2 from "../images/car2.png";
@@ -23,17 +24,29 @@ import happy from "../images/happy.png";
 export function PostPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const images = [landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
+    const images = [people, landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
     const { likeCount, handleLike, reactionStatus, handleDislike, dislikeCount } = useReactions();
     const { postId } = useParams();
     const postIdNumber = postId ? parseInt(postId, 10) : null;
     const [post, setPost] = useState<TypePost | null>(null);
+    const [imageIndex, setImageIndex] = useState(0);
+
 
 
     useEffect(() => {
         if (postIdNumber !== null) {
             getPostById(postIdNumber).then(setPost).catch(console.error);
         }
+    }, [postIdNumber]);
+
+    useEffect(() => {
+        if (postIdNumber !== null) {
+            getPostById(postIdNumber).then(setPost).catch(console.error);
+        }
+        // Извлекаем индекс изображения из localStorage
+        const storedImageIndex = localStorage.getItem('currentImageIndex');
+        const imageIndex = storedImageIndex ? parseInt(storedImageIndex, 10) : 0;
+        setImageIndex(imageIndex); // Убедитесь, что вы определили состояние для imageIndex используя useState
     }, [postIdNumber]);
 
     // Если пост еще не загружен, можно отобразить индикатор загрузки
@@ -82,7 +95,7 @@ export function PostPage() {
             </div>
             <div className="container-1">
                 <h1>{post.title}</h1>
-                <img src={office2} className='image-main' alt="Post" />
+                <img src={images[imageIndex]} className='image-main' alt="Post" />
                 <p className='text'>{post.body}</p>
             </div>
         </div>

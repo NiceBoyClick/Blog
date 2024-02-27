@@ -58,7 +58,9 @@ export function HomePage() {
         });
     }, [setDislikeCount, setLikeCount]);
 
-    const handleClick = (postId: number) => {
+    const handleClick = (postId: number, imageIndex: number) => {
+        // Сохраняем индекс изображения в localStorage
+        localStorage.setItem('currentImageIndex', imageIndex.toString());
         navigate(`/post/${postId}`);
     };
 
@@ -103,7 +105,7 @@ export function HomePage() {
                     </div>
                     <p>{posts[0].body}</p>
                     <div className='container-button'>
-                        <button onClick={() => handleClick(posts[0].id)} className='button'>Читать далее</button>
+                        <button onClick={() => handleClick(posts[0].id, 0)} className='button'>Читать далее</button>
                     </div>
                 </div>
             )}
@@ -135,7 +137,7 @@ export function HomePage() {
                                 </button>
                                 <span>{dislikeCount[post.id]}</span>
                             </div>
-                            <button onClick={() =>handleClick(post.id)} className='button'>Читать далее</button>
+                            <button onClick={() => handleClick(post.id, index % images.length + 1)} className='button'>Читать далее</button>
                         </div>
                     </div>
                 ))}
