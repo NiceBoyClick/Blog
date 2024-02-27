@@ -7,6 +7,7 @@
   overflow-x: hidden;
   flex-direction: column;
   padding-bottom: 20px;
+  /*border: red 2px solid;*/
 }
 
 .container-1 {
@@ -24,7 +25,7 @@
   align-items: center;
   width: 97%;
   padding: 0 10px;
-  /*border: red 2px solid;*/
+  /*border: blue 2px solid;*/
 }
 
 .container-3 {
@@ -150,6 +151,16 @@ width: 100%;
   background-color: #FFDE6B;
 }
 
+.button-inline {
+  display: flex;
+  align-items: center;
+  gap: 3px; /* Расстояние между изображением и текстом */
+  border: none; /* Опционально: убираем рамку кнопки */
+  background: none; /* Опционально: убираем фон кнопки */
+  cursor: pointer; /* Делаем курсор в виде руки, показывая, что это кликабельно */
+  padding: 5px; /* Опционально: добавляем немного отступа */
+}
+
 .shadow {
   box-shadow: 0 5px 10px 3px rgba(0, 0, 0, 0.1);
 }
@@ -160,4 +171,8 @@ p {
 
 .space-between {
   justify-content: space-between;
+}
+
+.space-around {
+  justify-content: space-around;
 }

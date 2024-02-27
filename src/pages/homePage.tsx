@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useReactions} from '../Context';
+import {getAllPosts} from '../api'
 import lope from "../images/loupe.png";
 import people from "../images/people.jpg";
 import like from "../images/greenLike.jpg";
@@ -36,26 +37,26 @@ export function HomePage() {
     const [posts, setPosts] = useState<TypePost[]>([]);
     const images = [landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
 
+    const initializeReactions = (posts: TypePost[]) => {
+        const likes: Record<number, number> = {};
+        const dislikes: Record<number, number> = {};
 
+        posts.forEach(post => {
+            likes[post.id] = Math.floor(Math.random() * 50);
+            dislikes[post.id] = Math.floor(Math.random() * 50);
+        });
 
-    // Загрузка постов
+        return { likes, dislikes };
+    }
+
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/posts')
-            .then(response => response.json())
-            .then((data: TypePost[]) => {
-                setPosts(data);
-                // Инициализация лайков и дизлайков случайными значениями
-                const initialLikes: Record<number, number> = {};
-                const initialDislikes: Record<number, number> = {};
-                data.forEach((post: TypePost) => {
-                    initialLikes[post.id] = Math.floor(Math.random() * 50);
-                    initialDislikes[post.id] = Math.floor(Math.random() * 50);
-                });
-                setLikeCount(initialLikes);
-                setDislikeCount(initialDislikes);
-            });
-    }, []);
-
+        getAllPosts().then((data) => {
+            setPosts(data);
+            const { likes, dislikes } = initializeReactions(data);
+            setLikeCount(likes);
+            setDislikeCount(dislikes);
+        });
+    }, [setDislikeCount, setLikeCount]);
 
     const handleClick = (postId: number) => {
         navigate(`/post/${postId}`);
@@ -134,7 +135,7 @@ export function HomePage() {
                                 </button>
                                 <span>{dislikeCount[post.id]}</span>
                             </div>
-                            <button onClick={() => handleClick(post.id)} className='button'>Читать далее</button>
+                            <button onClick={() =>handleClick(post.id)} className='button'>Читать далее</button>
                         </div>
                     </div>
                 ))}
