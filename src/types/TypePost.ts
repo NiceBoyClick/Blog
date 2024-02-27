@@ -4,4 +4,5 @@ export type TypePost = {
     title: string,
     body: string,
     image?: string;
+    imageIndex: number;
 };

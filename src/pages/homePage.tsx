@@ -35,7 +35,12 @@ export function HomePage() {
     } = useReactions();
 
     const [posts, setPosts] = useState<TypePost[]>([]);
-    const images = [landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
+    const images = [people, landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     const initializeReactions = (posts: TypePost[]) => {
         const likes: Record<number, number> = {};
@@ -50,18 +55,49 @@ export function HomePage() {
     }
 
     useEffect(() => {
-        getAllPosts().then((data) => {
-            setPosts(data);
-            const { likes, dislikes } = initializeReactions(data);
-            setLikeCount(likes);
-            setDislikeCount(dislikes);
-        });
-    }, [setDislikeCount, setLikeCount]);
+        setLoading(true);
+        getAllPosts(searchQuery, page)
+            .then((newPosts) => {
+                // Присвоение индекса картинки каждому новому посту
+                const updatedPosts = newPosts.map((post) => ({
+                    ...post,
+                    imageIndex: post.id % images.length // Циклическое присвоение индекса изображения
+                }));
 
-    const handleClick = (postId: number, imageIndex: number) => {
-        // Сохраняем индекс изображения в localStorage
-        localStorage.setItem('currentImageIndex', imageIndex.toString());
-        navigate(`/post/${postId}`);
+                setPosts((prevPosts) => [
+                    ...prevPosts, // Сохраняем уже загруженные посты
+                    ...updatedPosts // Добавляем новые посты
+                ]);
+
+                setHasMore(newPosts.length > 0);
+                setLoading(false);
+
+                const { likes, dislikes } = initializeReactions(updatedPosts);
+                setLikeCount((prevLikes) => ({ ...prevLikes, ...likes }));
+                setDislikeCount((prevDislikes) => ({ ...prevDislikes, ...dislikes }));
+            });
+    }, [images.length, searchQuery, page]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop < document.documentElement.offsetHeight - 100 || loading) {
+                return;
+            }
+            setPage(prevPage => prevPage + 1);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loading]);
+
+
+    const handleClick = (postId: number) => {
+        // Поиск поста по ID для получения его imageIndex
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+            localStorage.setItem('currentImageIndex', post.imageIndex.toString());
+            navigate(`/post/${postId}`);
+        }
     };
 
     return (
@@ -74,12 +110,13 @@ export function HomePage() {
                 </p>
                 <div className='input-container space-between'>
                     <img src={lope} alt="Поиск" className='icon'/>
-                    <input type="text" placeholder="поиск по названию статьи" className='input-field'/>
+                    <input type="text" placeholder="поиск по названию статьи" className='input-field'  value={searchQuery}
+                           onChange={(e) => setSearchQuery(e.target.value)}/>
                 </div>
             </div>
             {posts.length > 0 && (
                 <div className='container-1 shadow'>
-                    <img src={people} alt="" className='image-main'/>
+                    <img src={images[posts[0].imageIndex]} alt="" className='image-main'/>
                     <div className='container-2 space-between'>
                         <h2 className='title'>{posts[0].title}</h2>
                         <div className='like-dislike-container space-between'>
@@ -105,14 +142,14 @@ export function HomePage() {
                     </div>
                     <p>{posts[0].body}</p>
                     <div className='container-button'>
-                        <button onClick={() => handleClick(posts[0].id, 0)} className='button'>Читать далее</button>
+                        <button onClick={() => handleClick(posts[0].id)} className='button'>Читать далее</button>
                     </div>
                 </div>
             )}
             <div className='container-compact space-between'>
-                {posts.slice(1).map((post, index) => (
+                {posts.slice(1).map((post) => (
                     <div key={post.id} className='container-3 shadow'>
-                        <img src={images[index % images.length]} alt="" className='image-second'/>
+                        <img src={images[post.imageIndex]} alt="" className='image-second'/>
                         <div className='container-2'>
                             <h2 className='title-compact'>{post.title}</h2>
                         </div>
@@ -137,7 +174,7 @@ export function HomePage() {
                                 </button>
                                 <span>{dislikeCount[post.id]}</span>
                             </div>
-                            <button onClick={() => handleClick(post.id, index % images.length + 1)} className='button'>Читать далее</button>
+                            <button onClick={() => handleClick(post.id)} className='button'>Читать далее</button>
                         </div>
                     </div>
                 ))}

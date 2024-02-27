@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import { useReactions } from "../Context";
 import {getPostById} from "../api";
 import {TypePost} from "../types/TypePost";
@@ -19,25 +18,17 @@ import office2 from "../images/office2.png";
 import sunset from "../images/sunset.jpg";
 import book from "../images/book.jpg";
 import happy from "../images/happy.png";
+import {useNavigate, useParams} from "react-router-dom";
 
 
 export function PostPage() {
     const navigate = useNavigate();
-    const location = useLocation();
     const images = [people, landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
     const { likeCount, handleLike, reactionStatus, handleDislike, dislikeCount } = useReactions();
     const { postId } = useParams();
     const postIdNumber = postId ? parseInt(postId, 10) : null;
     const [post, setPost] = useState<TypePost | null>(null);
     const [imageIndex, setImageIndex] = useState(0);
-
-
-
-    useEffect(() => {
-        if (postIdNumber !== null) {
-            getPostById(postIdNumber).then(setPost).catch(console.error);
-        }
-    }, [postIdNumber]);
 
     useEffect(() => {
         if (postIdNumber !== null) {
@@ -94,8 +85,8 @@ export function PostPage() {
 
             </div>
             <div className="container-1">
-                <h1>{post.title}</h1>
-                <img src={images[imageIndex]} className='image-main' alt="Post" />
+                <h1 className="title">{post.title}</h1>
+                <img src={images[imageIndex]} className='image-three' alt="Post" />
                 <p className='text'>{post.body}</p>
             </div>
         </div>

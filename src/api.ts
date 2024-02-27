@@ -1,17 +1,23 @@
 import {TypePost} from "./types/TypePost";
 
-export const getAllPosts = async (): Promise<TypePost[]> => {
+export const getAllPosts = async (searchQuery = '', page = 1, limit = 11): Promise<TypePost[]> => {
     try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        let url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=${limit}`;
+        if (searchQuery) {
+            url += `&title_like=${encodeURIComponent(searchQuery)}`;
+        }
+
+        const response = await fetch(url);
         if (!response.ok) {
-             Error('Failed to fetch posts');
+            throw new Error('Failed to fetch posts');
         }
         return await response.json();
     } catch (error) {
         console.error('Error fetching posts:', error);
         return [];
     }
-}
+};
+
 
 export const getPostById = async (postId: number): Promise<TypePost> => {
     try {
@@ -22,6 +28,6 @@ export const getPostById = async (postId: number): Promise<TypePost> => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching post:', error);
-        throw error; // Лучше пробросить ошибку дальше, чтобы можно было обработать её в компоненте
+        throw error;
     }
 }
