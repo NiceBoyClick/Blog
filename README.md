@@ -8,7 +8,7 @@
 Для начала необходимо клонировать репозиторий 
 проекта на ваш локальный компьютер. Откройте терминал и выполните следующую команду:
 
-### `git clone https://github.com/Ваш_Username/Blog.git`
+### `git clone https://github.com/NiceBoyClick/Blog.git`
 
 ## Шаг 2: Установка зависимостей
 
@@ -33,3 +33,7 @@
 ### `yarn start`
 
 Проект будет запущен и доступен в браузере по адресу http://localhost:3000 (или другому порту, если он был автоматически изменен).
+вот так должен выглядеть сайт в браузере:
+![img.png](src/images/img.png)
+![img.png](src/images/img2.png)
+![img_1.png](src/images/img_1.png)
