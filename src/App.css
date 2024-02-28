@@ -66,14 +66,14 @@
 }
 
 .title-compact {
-  font-family: Calibri, serif;
+  font-family: Calibri, sans-serif;
   text-align: left;
   font-size: 20px;
 }
 
 .text {
   font-size: 20px;
-  font-family: Calibri, serif;
+  font-family: Calibri, sans-serif;
   width: 100%;
 }
 
