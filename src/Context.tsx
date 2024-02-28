@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {createContext, useContext, useState, ReactNode, useMemo} from 'react';
 
 interface ReactionContextType {
     likeCount: Record<number, number>;
@@ -65,8 +65,18 @@ export const ReactionProvider: React.FC<{children: ReactNode}> = ({ children }) 
         });
     };
 
+    const value = useMemo(() => ({
+        likeCount,
+        dislikeCount,
+        reactionStatus,
+        handleLike,
+        handleDislike,
+        setLikeCount,
+        setDislikeCount
+    }), [likeCount, dislikeCount, reactionStatus]);
+
     return (
-        <PostContext.Provider value={{ likeCount, dislikeCount, reactionStatus, handleLike, handleDislike, setLikeCount, setDislikeCount }}>
+        <PostContext.Provider value={value}>
             {children}
         </PostContext.Provider>
     );

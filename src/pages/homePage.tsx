@@ -20,7 +20,6 @@ import office2 from "../images/office2.png";
 import sunset from "../images/sunset.jpg";
 import book from "../images/book.jpg";
 import '../App.css';
-import {logDOM} from "@testing-library/react";
 
 export function HomePage() {
     const navigate = useNavigate();
@@ -39,10 +38,6 @@ export function HomePage() {
     const images = [people, landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
     const [searchQuery, setSearchQuery] = useState('');
 
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState<boolean>(true);
-
     const initializeReactions = (posts: TypePost[]) => {
         const likes: Record<number, number> = {};
         const dislikes: Record<number, number> = {};
@@ -56,8 +51,7 @@ export function HomePage() {
     }
 
     useEffect(() => {
-        setLoading(true); // Если вы хотите оставить индикатор загрузки, иначе удалите эту строку
-        getAllPosts(searchQuery) // Уберите параметр page
+        getAllPosts(searchQuery)
             .then((newPosts) => {
                 const updatedPosts = newPosts.map((post) => ({
                     ...post,
@@ -65,13 +59,11 @@ export function HomePage() {
                 }));
 
                 setPosts(updatedPosts);
-                setLoading(false); // Если вы хотите оставить индикатор загрузки, иначе удалите эту строку
-
                 const { likes, dislikes } = initializeReactions(updatedPosts);
                 setLikeCount((prevLikes) => ({ ...prevLikes, ...likes }));
                 setDislikeCount((prevDislikes) => ({ ...prevDislikes, ...dislikes }));
             });
-    }, [searchQuery]); // Уберите page из массива зависимостей
+    }, [images.length, searchQuery, setLikeCount, setDislikeCount]);
 
 
     const handleClick = (postId: number) => {
