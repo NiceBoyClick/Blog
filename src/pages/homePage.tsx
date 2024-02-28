@@ -19,6 +19,7 @@ import work from "../images/work.png";
 import office2 from "../images/office2.png";
 import sunset from "../images/sunset.jpg";
 import book from "../images/book.jpg";
+import up from "../images/up.png";
 import '../App.css';
 
 export function HomePage() {
@@ -74,7 +75,25 @@ export function HomePage() {
             navigate(`/post/${postId}`);
         }
     };
-    console.log(posts);
+
+    const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+
+    const scrollTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        const checkScrollTop = () => {
+            if (!showScrollTopButton && window.scrollY > 400) {
+                setShowScrollTopButton(true);
+            } else if (showScrollTopButton && window.scrollY <= 400) {
+                setShowScrollTopButton(false);
+            }
+        };
+        window.addEventListener('scroll', checkScrollTop);
+        return () => window.removeEventListener('scroll', checkScrollTop);
+    }, [showScrollTopButton]);
+
     return (
         <div className="App">
             <div className='container-1'>
@@ -154,6 +173,11 @@ export function HomePage() {
                     </div>
                 ))}
             </div>
+            {showScrollTopButton && (
+                <button onClick={scrollTop}>
+                    <img src={up} alt="" className='scrollTop'/>
+                </button>
+            )}
         </div>
     );
 }
