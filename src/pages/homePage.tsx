@@ -20,6 +20,7 @@ import office2 from "../images/office2.png";
 import sunset from "../images/sunset.jpg";
 import book from "../images/book.jpg";
 import '../App.css';
+import {logDOM} from "@testing-library/react";
 
 export function HomePage() {
     const navigate = useNavigate();
@@ -55,40 +56,22 @@ export function HomePage() {
     }
 
     useEffect(() => {
-        setLoading(true);
-        getAllPosts(searchQuery, page)
+        setLoading(true); // Если вы хотите оставить индикатор загрузки, иначе удалите эту строку
+        getAllPosts(searchQuery) // Уберите параметр page
             .then((newPosts) => {
-                // Присвоение индекса картинки каждому новому посту
                 const updatedPosts = newPosts.map((post) => ({
                     ...post,
-                    imageIndex: post.id % images.length // Циклическое присвоение индекса изображения
+                    imageIndex: post.id % images.length
                 }));
 
-                setPosts((prevPosts) => [
-                    ...prevPosts, // Сохраняем уже загруженные посты
-                    ...updatedPosts // Добавляем новые посты
-                ]);
-
-                setHasMore(newPosts.length > 0);
-                setLoading(false);
+                setPosts(updatedPosts);
+                setLoading(false); // Если вы хотите оставить индикатор загрузки, иначе удалите эту строку
 
                 const { likes, dislikes } = initializeReactions(updatedPosts);
                 setLikeCount((prevLikes) => ({ ...prevLikes, ...likes }));
                 setDislikeCount((prevDislikes) => ({ ...prevDislikes, ...dislikes }));
             });
-    }, [images.length, searchQuery, page]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop < document.documentElement.offsetHeight - 100 || loading) {
-                return;
-            }
-            setPage(prevPage => prevPage + 1);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [loading]);
+    }, [searchQuery]); // Уберите page из массива зависимостей
 
 
     const handleClick = (postId: number) => {
@@ -99,7 +82,7 @@ export function HomePage() {
             navigate(`/post/${postId}`);
         }
     };
-
+    console.log(posts);
     return (
         <div className="App">
             <div className='container-1'>

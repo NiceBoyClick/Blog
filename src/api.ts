@@ -1,8 +1,8 @@
 import {TypePost} from "./types/TypePost";
 
-export const getAllPosts = async (searchQuery = '', page = 1, limit = 11): Promise<TypePost[]> => {
+export const getAllPosts = async (searchQuery = ''): Promise<TypePost[]> => {
     try {
-        let url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=${limit}`;
+        let url = `https://jsonplaceholder.typicode.com/posts?`;
         if (searchQuery) {
             url += `&title_like=${encodeURIComponent(searchQuery)}`;
         }
