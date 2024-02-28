@@ -37,10 +37,9 @@ export function PostPage() {
         // Извлекаем индекс изображения из localStorage
         const storedImageIndex = localStorage.getItem('currentImageIndex');
         const imageIndex = storedImageIndex ? parseInt(storedImageIndex, 10) : 0;
-        setImageIndex(imageIndex); // Убедитесь, что вы определили состояние для imageIndex используя useState
+        setImageIndex(imageIndex);
     }, [postIdNumber]);
 
-    // Если пост еще не загружен, можно отобразить индикатор загрузки
     if (!post) {
         return <div>Loading...</div>;
     }
@@ -60,7 +59,7 @@ export function PostPage() {
                         </p>
                     </button>
                     <div className='like-dislike-container'>
-                        {postIdNumber !== null && ( // Проверка, что postIdNumber не null перед вызовом handleLike и handleDislike
+                        {postIdNumber !== null && (
                             <>
                                 <button
                                     className="like-button"
