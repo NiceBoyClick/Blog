@@ -63,18 +63,21 @@
   font-family: Calibri , sans-serif;
   text-align: left;
   font-size: 25px;
+  margin-left: 10px;
 }
 
 .title-compact {
   font-family: Calibri, sans-serif;
   text-align: left;
   font-size: 20px;
+  margin-left: 10px;
 }
 
 .text {
-  font-size: 20px;
+  font-size: 18px;
   font-family: Calibri, sans-serif;
-  width: 100%;
+  width: 96%;
+  margin-left: 10px;
 }
 
 .input-container {

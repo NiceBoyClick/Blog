@@ -38,6 +38,8 @@ export function HomePage() {
     const [posts, setPosts] = useState<TypePost[]>([]);
     const images = [people, landscape, cat, car2, camp2, woman, work, office2, sunset, book, happy];
     const [searchQuery, setSearchQuery] = useState('');
+    const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+
 
     const initializeReactions = (posts: TypePost[]) => {
         const likes: Record<number, number> = {};
@@ -66,7 +68,6 @@ export function HomePage() {
             });
     }, [images.length, searchQuery, setLikeCount, setDislikeCount]);
 
-
     const handleClick = (postId: number) => {
         // Поиск поста по ID для получения его imageIndex
         const post = posts.find(p => p.id === postId);
@@ -75,8 +76,6 @@ export function HomePage() {
             navigate(`/post/${postId}`);
         }
     };
-
-    const [showScrollTopButton, setShowScrollTopButton] = useState(false);
 
     const scrollTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -134,7 +133,7 @@ export function HomePage() {
                             <span>{dislikeCount[posts[0].id]}</span>
                         </div>
                     </div>
-                    <p>{posts[0].body}</p>
+                    <p className='text'>{posts[0].body}</p>
                     <div className='container-button'>
                         <button onClick={() => handleClick(posts[0].id)} className='button'>Читать далее</button>
                     </div>
